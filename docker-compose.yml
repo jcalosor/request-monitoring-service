@@ -1,0 +1,21 @@
+services:
+  app:
+    build: .
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo
+    environment:
+      - PORT=4000
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+  mongo:
+    image: mongo:5
+    container_name: mongodb
+    ports:
+      - "37017:27017"
+    volumes:
+      - mongo_data:/data/db
+volumes:
+  mongo_data:
