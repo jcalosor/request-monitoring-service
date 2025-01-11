@@ -1,10 +1,16 @@
-import {App} from './app';
-import {PingService} from "./services/pingService";
+import dotenv from 'dotenv';
+import App from './app';
+import * as process from "node:process";
 
-const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
-const MONGODB_PORT = process.env.MONGODB_PORT ? parseInt(process.env.MONGODB_PORT) : 27017;
+dotenv.config();
 
-const appInstance = new App(PORT, MONGODB_PORT);
+// Resolve the dependencies.
+const PORT = process.env.APP_PORT ? parseInt(process.env.APP_PORT, 10) : 4000;
+const DB_PORT = process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 27017;
+const DB_SCHEMA = process.env.DB_SCHEMA ? process.env.DB_SCHEMA.toString() : 'request-monitor';
+const PING_INTERVAL = process.env.PING_INTERVAL ? parseInt(process.env.PING_INTERVAL, 10) : 1;
 
-new PingService(appInstance.io);
+// Instantiate the main application.
+const appInstance = new App(PORT, DB_PORT, DB_SCHEMA, PING_INTERVAL);
+
 appInstance.start();

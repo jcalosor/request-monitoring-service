@@ -7,15 +7,18 @@ services:
       - mongo
     environment:
       - PORT=4000
+    container_name: request-monitor-backend-app
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+
   mongo:
     image: mongo:5
-    container_name: mongodb
+    container_name: request-monitor-mongo
     ports:
       - "37017:27017"
     volumes:
       - mongo_data:/data/db
+
 volumes:
   mongo_data:
