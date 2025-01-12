@@ -4,16 +4,6 @@ version: 2.1
 orbs:
   node: circleci/node@5
 jobs:
-  test-node:
-    # Install node dependencies and run tests
-    executor: node/default
-    steps:
-      - checkout
-      - node/install-packages:
-          pkg-manager: npm
-      - run:
-          name: Run tests
-          command: npm run unit:test --passWithNoTests
   build-node:
     # Build node project
     executor: node/default
@@ -22,7 +12,7 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run:
-          command: npm run build
+          command: npm run install && npm run build
       - run:
           name: Create the ~/artifacts directory if it doesn't exist
           command: mkdir -p ~/artifacts
@@ -33,6 +23,16 @@ jobs:
       - store_artifacts:
           path: ~/artifacts
           destination: node-build
+  test-node:
+    # Install node dependencies and run tests
+    executor: node/default
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          name: Run tests
+          command: npm run unit:test
   deploy:
     # This is an example deploy job, not actually used by the workflow
     docker:
