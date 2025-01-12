@@ -1,45 +1,35 @@
 version: 2.1
-orbs:
-  node: circleci/node@5
-jobs:
-  build-node:
-    executor: node/default
-    steps:
-      - checkout
-      - node/install-packages:
-          pkg-manager: npm
-      - run:
-          command: npm run build
-      - store_artifacts:
-          path: build
-          destination: node-build
-  test-node:
-    executor: node/default
-    environment:
-      NODE_ENV: development
-      APP_PORT: 4000
-      APP_HOST: localhost
-      DB_DRIVER: mongodb
-      MONGODB_PORT: 27017
-      MONGODB_DB: request-monitor
-      PING_INTERVAL: 1
 
+jobs:
+  build:
+    docker:
+      - image: custom-docker-image:latest
     steps:
       - checkout
-      - node/install-packages:
-          pkg-manager: npm
+      - setup_remote_docker
       - run:
-          name: Add typescript
-          command: npm install -g @types/chai-as-promised @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser chai chai-as-promised eslint eslint-config-airbnb-base eslint-plugin-import mocha nyc ts-node typescript
+          name: Build the project
+          command: |
+            npm install
+            npm run build
+
+  test:
+    docker:
+      - image: custom-docker-image:latest
+    steps:
+      - checkout
+      - setup_remote_docker
       - run:
-          name: Run TypeScript Tests
-          # Make sure the build is updated
-          # @todo: configure circle-ci to interpret ".ts" extensions
-          command:  npx mocha ./tests/unit/**/*.spec.ts --require ts-node/register --config .mocharc.json
+          name: Run Unit Tests
+          command: |
+            npm install
+            npm test
+
 workflows:
-  build-and-test:
+  version: 2
+  build_and_test:
     jobs:
-      - test-node
-      - build-node:
+      - build
+      - test:
           requires:
-            - test-node
+            - build
