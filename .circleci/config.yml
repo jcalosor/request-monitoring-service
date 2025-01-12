@@ -23,7 +23,7 @@ jobs:
           name: Run TypeScript Tests
           # Make sure the build is updated
           # @todo: configure circle-ci to interpret ".ts" extensions
-          command: npm run install && npx mocha ./tests/unit/**/*.spec.ts --require ts-node/register --config .mocharc.json
+          command: npm install && npx mocha ./tests/unit/**/*.spec.ts --require ts-node/register --config .mocharc.json
 workflows:
   build-and-test:
     jobs:
