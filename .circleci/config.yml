@@ -21,7 +21,7 @@ jobs:
           pkg-manager: npm
       - run:
           name: Run TypeScript Tests
-          command: npm install && mocha --require ts-node/register --config .mocharc.json
+          command: ./node_modules/.bin/mocha ./tests/unit/**/*.spec.ts --require ts-node/register --config .mocharc.json
 workflows:
   build-and-test:
     jobs:
