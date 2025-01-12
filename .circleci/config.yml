@@ -30,7 +30,7 @@ jobs:
           pkg-manager: npm
       - run:
           name: Add typescript
-          command: npm install -g typescript && npm install -g ts-node
+          command: npm install -g @types/chai-as-promised @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser chai chai-as-promised eslint eslint-config-airbnb-base eslint-plugin-import mocha nyc ts-node typescript
       - run:
           name: Run TypeScript Tests
           # Make sure the build is updated
