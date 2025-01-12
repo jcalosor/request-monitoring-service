@@ -15,6 +15,15 @@ jobs:
           destination: node-build
   test-node:
     executor: node/default
+    environment:
+      NODE_ENV: development
+      APP_PORT: 4000
+      APP_HOST: localhost
+      DB_DRIVER: mongodb
+      MONGODB_PORT: 27017
+      MONGODB_DB: request-monitor
+      PING_INTERVAL: 1
+      
     steps:
       - checkout
       - node/install-packages:
