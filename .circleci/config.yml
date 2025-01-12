@@ -23,7 +23,7 @@ jobs:
       MONGODB_PORT: 27017
       MONGODB_DB: request-monitor
       PING_INTERVAL: 1
-      
+
     steps:
       - checkout
       - node/install-packages:
@@ -32,7 +32,7 @@ jobs:
           name: Run TypeScript Tests
           # Make sure the build is updated
           # @todo: configure circle-ci to interpret ".ts" extensions
-          command: npm install && npx mocha ./tests/unit/**/*.spec.ts --require ts-node/register --config .mocharc.json
+          command: npm install -g typescript && npm install -g ts-node && npx mocha ./tests/unit/**/*.spec.ts --require ts-node/register --config .mocharc.json
 workflows:
   build-and-test:
     jobs:
