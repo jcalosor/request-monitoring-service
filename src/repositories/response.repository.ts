@@ -6,6 +6,6 @@ export default class ResponseRepository extends BaseRepository<Response> {
   override modelInstance = ResponseModel;
 
   async create(data: any): Promise<HydratedDocument<any>> {
-    return await this.modelInstance.create({ data });
+    return this.modelInstance.create({ data });
   }
 }
