@@ -1,32 +1,39 @@
 version: 2.1
 
+executors:
+  docker-executor:
+    docker:
+      - image: docker:20.10
+    working_directory: ~/project
+
 jobs:
   build:
-    docker:
-      - image: custom-docker-image:latest
+    executor: docker-executor
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 20.10.8
       - run:
-          name: Build the project
+          name: Build Docker Image
           command: |
-            npm install
-            npm run build
+            docker build -t custom-docker-image:latest .
 
   test:
-    docker:
-      - image: custom-docker-image:latest
+    executor: docker-executor
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 20.10.8
       - run:
-          name: Run Unit Tests
+          name: Use Docker Image for Testing
           command: |
-            npm install
-            npm test
+            docker run --rm \
+              -v $(pwd):/usr/src/app \
+              -w /usr/src/app \
+              custom-docker-image:latest \
+              sh -c "npm install && npm test"
 
 workflows:
-  version: 2
   build_and_test:
     jobs:
       - build
