@@ -59,6 +59,8 @@ export default class App {
       },
     );
 
+    // Initiate the ping service,
+    // @todo: this could have been cron job to decouple the load from the api-service
     this.ping.startPinging();
   }
 }

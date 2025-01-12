@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
+import * as process from 'node:process';
 import App from './app';
-import * as process from "node:process";
 
 dotenv.config();
 

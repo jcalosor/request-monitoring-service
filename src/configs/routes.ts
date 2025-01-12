@@ -1,6 +1,5 @@
 import { FastifyInstance } from 'fastify';
 import HistoryController from '../controllers/history.controller';
-import ResponseRepository from '../repositories/response.repository';
 
 /**
  * Route abstraction & definitions with logic initialization.

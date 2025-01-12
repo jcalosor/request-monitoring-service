@@ -5,7 +5,8 @@ import ResponseRepository from '../repositories/response.repository';
 
 export default class PingService {
   private io: SocketIOServer;
-  private pingInterval: number;
+
+  private readonly pingInterval: number;
 
   constructor(io: SocketIOServer, pingInterval: number) {
     this.io = io;
