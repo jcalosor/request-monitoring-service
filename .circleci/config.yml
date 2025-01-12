@@ -29,10 +29,13 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run:
+          name: Add typescript
+          command: npm install -g typescript && npm install -g ts-node
+      - run:
           name: Run TypeScript Tests
           # Make sure the build is updated
           # @todo: configure circle-ci to interpret ".ts" extensions
-          command: npm install -g typescript && npm install -g ts-node && npx mocha ./tests/unit/**/*.spec.ts --require ts-node/register --config .mocharc.json
+          command:  npx mocha ./tests/unit/**/*.spec.ts --require ts-node/register --config .mocharc.json
 workflows:
   build-and-test:
     jobs:
