@@ -12,7 +12,7 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run:
-          command: npm run install && npm run build
+          command: npm run build
       - run:
           name: Create the ~/artifacts directory if it doesn't exist
           command: mkdir -p ~/artifacts
@@ -32,7 +32,7 @@ jobs:
           pkg-manager: npm
       - run:
           name: Run tests
-          command: npm run unit:test
+          command: npm run install && npm run unit:test
   deploy:
     # This is an example deploy job, not actually used by the workflow
     docker:
