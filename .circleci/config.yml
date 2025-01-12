@@ -21,7 +21,9 @@ jobs:
           pkg-manager: npm
       - run:
           name: Run TypeScript Tests
-          command: ./node_modules/.bin/mocha ./tests/unit/**/*.spec.ts --require ts-node/register --config .mocharc.json
+          # Make sure the build is updated
+          # @todo: configure circle-ci to interpret ".ts" extensions
+          command: npm run build && ./node_modules/.bin/mocha --config .mocharc.json --require ts-node/register ./dist/tests/**/*.spec.js
 workflows:
   build-and-test:
     jobs:
