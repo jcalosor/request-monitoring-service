@@ -32,7 +32,7 @@ jobs:
           pkg-manager: npm
       - run:
           name: Run tests
-          command: npm install && npm run unit:test
+          command: npm run unit:test
   deploy:
     # This is an example deploy job, not actually used by the workflow
     docker:

@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "mocha --config .mocharc.json",
-    "unit:test": "./node_modules/.bin/nyc --reporter=lcov --reporter=text ./node_modules/.bin/mocha --recursive -r ts-node/register -r tsconfig-paths/register './tests/unit/**/*.spec.ts'"
+    "unit:test": "./node_modules/.bin/mocha ./tests/unit/**/*.spec.ts --require ts-node/register --config .mocharc.json",
+    "unit:test:coverage": "./node_modules/.bin/nyc --reporter=lcov --reporter=text ./node_modules/.bin/mocha --recursive -r ts-node/register -r tsconfig-paths/register './tests/unit/**/*.spec.ts'"
   },
   "dependencies": {
     "@fastify/cors": "^10.0.2",
