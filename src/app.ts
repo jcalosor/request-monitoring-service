@@ -4,7 +4,8 @@ import fastifyCors from '@fastify/cors';
 import { Server as SocketIOServer } from 'socket.io';
 import router from './configs/routes';
 import database from './configs/database';
-import PingService from './services/pingService';
+import Pusher from "pusher";
+import NotificationService from "@services/NotificationService";
 
 // Initialize application components
 export default class App {
@@ -12,15 +13,24 @@ export default class App {
 
   public io: SocketIOServer;
 
-  public ping: PingService;
+  public ping: NotificationService;
 
   public port: number;
 
-  constructor(port: number, dbPort: number, dbSchema: string, pingInterval: number) {
+  public pusher: Pusher;
+
+  constructor(
+      pusher: Pusher,
+      port: number,
+      dbPort: number,
+      dbSchema: string,
+      pingInterval: number
+  ) {
     this.app = Fastify({ logger: true });
     this.io = new SocketIOServer(this.app.server);
-    this.ping = new PingService(this.io, pingInterval);
+    this.ping = new NotificationService(pusher, pingInterval);
 
+    this.pusher = pusher;
     this.port = port;
 
     // Initialize database connections
@@ -30,7 +40,7 @@ export default class App {
     router(this.app);
 
     this.initializeMiddleware();
-    this.initializeWebSocket();
+    // this.initializeWebSocket();
   }
 
   private initializeMiddleware(): void {

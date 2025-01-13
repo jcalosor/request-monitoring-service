@@ -1,19 +1,24 @@
-import { Server as SocketIOServer } from 'socket.io';
 import axios from 'axios';
-import PayloadGenerator from './payloadGenerator';
+import PayloadGenerator from './PayloadGenerator';
 import ResponseRepository from '../repositories/response.repository';
+import Pusher from "pusher";
+import notificationConfig from "../configs/notification";
 
-export default class PingService {
-  private io: SocketIOServer;
+export default class NotificationService {
+
+  private pusher: Pusher;
 
   private readonly pingInterval: number;
 
-  constructor(io: SocketIOServer, pingInterval: number) {
-    this.io = io;
+  private config;
+
+  constructor(pusher: Pusher, pingInterval: number) {
+    this.pusher = pusher;
     this.pingInterval = pingInterval;
+    this.config = notificationConfig;
   }
 
-  private async pingHttpBin(): Promise<void> {
+  private async sendNotification(): Promise<void> {
     try {
       const payload = PayloadGenerator.generate();
       const response = await axios.post('https://httpbin.org/anything', payload);
@@ -23,7 +28,11 @@ export default class PingService {
       await createResponse;
 
       // Broadcast the new data to connected clients
-      this.io.emit('newData', responseData);
+      await this.pusher.trigger(this.config.channel, this.config.event, responseData)
+          .then(function(result){
+            console.log(result);
+          });
+
     } catch (error) {
       if (error instanceof Error) {
         console.error('Error pinging httpbin:', error.message);
@@ -34,6 +43,6 @@ export default class PingService {
   }
 
   startPinging(): void {
-    setInterval(() => this.pingHttpBin(), this.pingInterval * 60 * 1000);
+    setInterval(() => this.sendNotification(), this.pingInterval * 60 * 1000);
   }
 }
