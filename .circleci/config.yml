@@ -1,28 +1,39 @@
 version: 2.1
 
+executors:
+  docker-executor:
+    docker:
+      - image: docker:20.10
+    working_directory: ~/project
+
 jobs:
   build:
-    docker:
-      - image: circleci/node:16
+    executor: docker-executor
     steps:
       - checkout
       - setup_remote_docker
       - run:
           name: Build Docker Image
-          command: docker build -t custom-docker-image .
+          command: |
+            docker build -t $DOCKER_USER/request-monitor-docker-image:latest .
+      - run:
+          name: Push Docker Image
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            docker push $DOCKER_USER/request-monitor-docker-image:latest
 
   test:
-    docker:
-      - image: circleci/node:16
+    executor: docker-executor
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: Run Tests in Docker
+          name: Pull and Run Tests in Docker
           command: |
+            docker pull $DOCKER_USER/request-monitor-docker-image:latest
             docker run --rm \
               -v $(pwd):/app \
-              -w /app custom-docker-image \
+              -w /app $DOCKER_USER/request-monitor-docker-image:latest \
               sh -c "npm install && npm test"
 
 workflows:
