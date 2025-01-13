@@ -34,7 +34,7 @@ jobs:
             docker run --rm \
               -v $(pwd):/usr/src/app \
               -w /usr/src/app $DOCKER_USER/request-monitor-docker-image:latest \
-              sh -c "cp -r /usr/src/app/* . && npm install && npm test"
+              sh -c "ls /usr/src/app && npm install && npm test"
 
 workflows:
   build_and_test:
