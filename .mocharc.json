@@ -2,6 +2,5 @@
   "recursive": true,
   "timeout": 5000,
   "reporter": "spec",
-  "require": ["ts-node/register"],
-  "package": "./package.json"
+  "require": ["ts-node/register", "tests/unit/helpers/test-helper.ts"]
 }

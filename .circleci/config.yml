@@ -1,0 +1,45 @@
+version: 2.1
+
+executors:
+  docker-executor:
+    docker:
+      - image: docker:20.10
+    working_directory: ~/project
+
+jobs:
+  build:
+    executor: docker-executor
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker Image
+          command: |
+            docker build -t $DOCKER_USER/request-monitor-docker-image:latest .
+      - run:
+          name: Push Docker Image
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            docker push $DOCKER_USER/request-monitor-docker-image:latest
+
+  test:
+    executor: docker-executor
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Pull and Run Tests in Docker
+          command: |
+            docker pull $DOCKER_USER/request-monitor-docker-image:latest
+            docker run --rm \
+              -v $(PWD):/usr/src/app \
+              -w /usr/src/app $DOCKER_USER/request-monitor-docker-image:latest \
+              sh -c "ls /usr/src/app && npm install && npm test"
+
+workflows:
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
