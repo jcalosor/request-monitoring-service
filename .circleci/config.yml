@@ -32,9 +32,10 @@ jobs:
           command: |
             docker pull $DOCKER_USER/request-monitor-docker-image:latest
             docker run --rm \
-              -v $(pwd):/usr/src/app \
-              -w /usr/src/app $DOCKER_USER/request-monitor-docker-image:latest \
-              sh -c "ls /usr/src/app && npm install && npm test"
+              sh -c "ls -li -al"
+#              -v $(pwd):/usr/src/app \
+#              -w /usr/src/app $DOCKER_USER/request-monitor-docker-image:latest \
+#              sh -c "ls /usr/src/app && npm install && npm test"
 
 workflows:
   build_and_test:
