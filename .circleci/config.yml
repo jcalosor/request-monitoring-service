@@ -32,8 +32,8 @@ jobs:
           command: |
             docker pull $DOCKER_USER/request-monitor-docker-image:latest
             docker run --rm \
-              -v $(pwd):/ \
-              -w / $DOCKER_USER/request-monitor-docker-image:latest \
+              -v $(pwd):/usr/src/app \
+              -w /usr/src/app $DOCKER_USER/request-monitor-docker-image:latest \
               sh -c "npm install && npm test"
 
 workflows:
