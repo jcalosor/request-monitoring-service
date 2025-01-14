@@ -5,7 +5,7 @@ import { Server as SocketIOServer } from 'socket.io';
 import router from './configs/routes';
 import database from './configs/database';
 import Pusher from "pusher";
-import NotificationService from "@services/NotificationService";
+import NotificationService from "./services/NotificationService";
 
 // Initialize application components
 export default class App {
@@ -17,10 +17,7 @@ export default class App {
 
   public port: number;
 
-  public pusher: Pusher;
-
   constructor(
-      pusher: Pusher,
       port: number,
       dbPort: number,
       dbSchema: string,
@@ -28,9 +25,8 @@ export default class App {
   ) {
     this.app = Fastify({ logger: true });
     this.io = new SocketIOServer(this.app.server);
-    this.ping = new NotificationService(pusher, pingInterval);
+    this.ping = new NotificationService(pingInterval);
 
-    this.pusher = pusher;
     this.port = port;
 
     // Initialize database connections
@@ -62,7 +58,6 @@ export default class App {
       { port: this.port, host: process.env.APP_HOST },
       (err, address) => {
         if (err) {
-          console.error(err);
           process.exit(1);
         }
         console.log(`Server is running on ${address}`);
