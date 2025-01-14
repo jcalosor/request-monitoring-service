@@ -5,7 +5,7 @@ import { Server as SocketIOServer } from 'socket.io';
 import router from './configs/routes';
 import database from './configs/database';
 import Pusher from "pusher";
-import NotificationService from "@services/NotificationService";
+import NotificationService from "./services/NotificationService";
 
 // Initialize application components
 export default class App {
@@ -27,29 +27,47 @@ export default class App {
       pingInterval: number
   ) {
     this.app = Fastify({ logger: true });
-    this.io = new SocketIOServer(this.app.server);
-    this.ping = new NotificationService(pusher, pingInterval);
-
     this.pusher = pusher;
     this.port = port;
+
+    this.io = new SocketIOServer(this.app.server, {
+      cors: {
+        origin: "*",
+        methods: "*",
+        allowedHeaders: ["Content-Type", "Authorization"],
+      }
+    });
 
     // Initialize database connections
     database(dbPort, dbSchema);
 
     // Initialize routes
-    router(this.app);
-
     this.initializeMiddleware();
-    // this.initializeWebSocket();
+    this.initializeWebSocket();
+
+    router(this.app);
+    this.ping = new NotificationService(this.io, pingInterval);
+
   }
 
   private initializeMiddleware(): void {
-    this.app.register(fastifyCors);
+    this.app.register(require("@fastify/cors"),
+        {
+          origin: "*",
+          methods: "*",
+          allowedHeaders: ["Content-Type", "Authorization"],
+        }
+      );
   }
 
   private initializeWebSocket(): void {
+    this.app.decorate("socket", this.io);
+
     this.io.on('connection', (socket) => {
-      console.log('A client connected');
+      console.log('A client connected!');
+      console.log(socket.data);
+
+
 
       socket.on('disconnect', () => {
         console.log('A client disconnected');

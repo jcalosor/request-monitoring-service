@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "npm run start:dev",
-    "start:prod": "node ./dist/index.js",
+    "start:prod": "node ./dist/src/index.js",
     "start:dev": "tsc-watch -p ./tsconfig.json --onSuccess \"npm run start:prod\" ",
     "build": "./node_modules/typescript/bin/tsc -p ./tsconfig.json",
     "lint": "eslint .",
