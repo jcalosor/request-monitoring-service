@@ -32,25 +32,38 @@ git clone <repository-url>
 cd request-monitor-backend
 ```
 
-### 2. Install Dependencies
+### 2. Setup env 
+Copy the .env.txt to .env, fill up the pusher creds
+```bash
+PUSH_CHANNEL=""
+PUSH_EVENT=""
+PUSH_APP_ID=
+PUSH_APP_KEY=
+PUSH_APP_SECRET=
+PUSH_APP_CLUSTER=
+PUSH_APP_TLS=
+```
+follow the steps in [pusher.com](pusher.com) to retrieve these values.
+
+### 3. Install Dependencies
 Ensure all required packages are installed:
 ```bash
 npm install
 ```
 
-### 3. Build the Application
+### 4. Build the Application
 Compile the TypeScript code to JavaScript:
 ```bash
 npm run build
 ```
 
-### 4. Run the Application
+### 5. Run the Application
 Start the application:
 ```bash
 npm start
 ```
 
-### 5. Run Unit Tests
+### 6. Run Unit Tests
 Execute the unit tests using Mocha:
 ```bash
 npm test

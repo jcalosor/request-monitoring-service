@@ -12,10 +12,13 @@ export default class NotificationService {
 
   private config;
 
-  constructor(pusher: Pusher, pingInterval: number) {
-    this.pusher = pusher;
-    this.pingInterval = pingInterval;
+  constructor(pingInterval: number) {
     this.config = notificationConfig;
+
+    // @ts-ignore
+    this.pusher = new Pusher(this.config);
+    this.pingInterval = pingInterval;
+
   }
 
   private async sendNotification(): Promise<void> {
@@ -27,10 +30,12 @@ export default class NotificationService {
       const createResponse = new ResponseRepository().create(responseData);
       await createResponse;
 
+
       // Broadcast the new data to connected clients
+      // @ts-ignore
       await this.pusher.trigger(this.config.channel, this.config.event, responseData)
           .then(function(result){
-            console.log(result);
+            // For debug purpose.
           });
 
     } catch (error) {
@@ -43,6 +48,6 @@ export default class NotificationService {
   }
 
   startPinging(): void {
-    setInterval(() => this.sendNotification(), this.pingInterval * 60 * 1000);
+    setInterval(() => this.sendNotification(), this.pingInterval * 60 * 100);
   }
 }
