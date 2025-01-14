@@ -32,7 +32,8 @@ export default class NotificationService {
 
 
       // Broadcast the new data to connected clients
-      await this.pusher.trigger(this.config.channel || 'tae', this.config.event || 'tae', responseData)
+      // @ts-ignore
+      await this.pusher.trigger(this.config.channel, this.config.event, responseData)
           .then(function(result){
             // For debug purpose.
           });
